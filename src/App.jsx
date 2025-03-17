@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Pages/Home";
 import Footer from "./components/Footer";
 import Login from "./components/Pages/Login";
+import Signup from "./components/Pages/Signup";
 import CreatePost from "./components/Pages/CreatePost";
 import PostDetail from "./components/Pages/PostDetail";
 import Dashboard from "./components/Pages/Dashboard";
@@ -19,6 +20,7 @@ function App() {
 
         {/* Login Page */}
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         {/* Post Detail Page */}
         <Route path="/post/:id" element={<PostDetail />} />

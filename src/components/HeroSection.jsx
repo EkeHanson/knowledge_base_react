@@ -45,7 +45,7 @@ const  HeroSection = () => {
             to="/create-post"
             sx={{ fontWeight: 600 }}
           >
-            Get Started
+            Create Post
           </Button>
         </Container>
       </Box>

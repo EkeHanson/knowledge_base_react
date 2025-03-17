@@ -6,7 +6,18 @@ const Navbar = () => {
   return (
     <AppBar position="static" color="primary" elevation={0}>
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            flexGrow: 1,
+            fontWeight: 600,
+            cursor: "pointer",
+            textDecoration: "none", // Removes underline
+          }}
+          component={Link}
+          to="/"  // Navigates to home page on click
+          color="inherit"
+        >
           Knowledge Base
         </Typography>
         <Button color="inherit" component={Link} to="/login">

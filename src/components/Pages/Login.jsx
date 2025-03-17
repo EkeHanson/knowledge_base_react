@@ -1,34 +1,28 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Grid,
-  Link,
-  Box,
-  CssBaseline,
-  Paper,
-} from "@mui/material";
+import config from "../../config";
+import {  Container,  Typography,  TextField,  Button,  Grid,  Link,  Box,  CssBaseline,  Paper, CircularProgress,  Alert, } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import FlashMessage from "../FlashMessage/FlashMessage";
 
-// Custom yellow theme
 const theme = createTheme({
   palette: {
-    primary: {
-      main: "#FFD700", // Gold/yellow
-    },
-    secondary: {
-      main: "#000000", // Black
-    },
-    background: {
-      default: "#FFF8E1", // Light yellow
-    },
+    primary: { main: "#FFD700" }, // Gold/yellow
+    secondary: { main: "#000000" }, // Black
+    background: { default: "#FFF8E1" }, // Light yellow
   },
 });
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
+    const navigate = useNavigate(); // Initialize useNavigate
+    const [flash, setFlash] = useState(null);
+    const showMessage = (message, type) => {
+      setFlash({ message, type });
+    };
+  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,29 +31,48 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      // Handle login logic
-      console.log("Logging in with:", formData.email, formData.password);
-    } else {
-      // Handle signup logic
-      if (formData.password !== formData.confirmPassword) {
-        alert("Passwords do not match!");
-        return;
+    setLoading(true);
+    setError("");
+
+    try {
+      if (isLogin) {
+        // **LOGIN API CALL**
+        const response = await axios.post(`${config.API_BASE_URL}/user/login/`, {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        // console.log("Login success:", response.data);
+        localStorage.setItem("access_token", response.data.access); // Store token in local storage
+        showMessage("Login successful! Redirecting to Landing Page...", "success");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
       }
-      console.log("Signing up with:", formData.email, formData.password);
+    } catch (err) {
+      console.error("Error:", err.response?.data);
+      setError(err.response?.data?.error || "Something went wrong.");
+      showMessage(err.response?.data?.error || "Something went wrong.", "failure");
     }
+
+    setLoading(false);
   };
 
   return (
     <ThemeProvider theme={theme}>
+      {flash && (
+        <FlashMessage
+          message={flash.message}
+          type={flash.type}
+          onClose={() => setFlash(null)}
+        />
+      )}
       <CssBaseline />
       <Container
         component="main"
@@ -85,6 +98,9 @@ const Login = () => {
           <Typography component="h1" variant="h5">
             {isLogin ? "Login" : "Sign Up"}
           </Typography>
+
+          {error && <Alert severity="error">{error}</Alert>}
+
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -133,19 +149,14 @@ const Login = () => {
               variant="contained"
               color="primary"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
             >
-              {isLogin ? "Login" : "Sign Up"}
+              {loading ? <CircularProgress size={24} color="secondary" /> : isLogin ? "Login" : "Sign Up"}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link
-                  href="#"
-                  variant="body2"
-                  onClick={() => setIsLogin(!isLogin)}
-                >
-                  {isLogin
-                    ? "Don't have an account? Sign Up"
-                    : "Already have an account? Login"}
+                <Link href="/signup" variant="body2" onClick={() => setIsLogin(!isLogin)}>
+                  {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login"}
                 </Link>
               </Grid>
             </Grid>

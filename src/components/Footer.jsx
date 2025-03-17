@@ -161,7 +161,7 @@ const Footer = () => {
                   <ListItemIcon sx={{ color: "secondary.main" }}>
                     <Phone />
                   </ListItemIcon>
-                  <Typography>+1 (123) 456-7890</Typography>
+                  <Typography>+ (234) 8146955393</Typography>
                 </ListItem>
                 <ListItem>
                   <ListItemIcon sx={{ color: "secondary.main" }}>

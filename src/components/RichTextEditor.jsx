@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-const RichTextEditor = ({ value, onChange }) => {
+const RichTextEditor = forwardRef(({ value, onChange }, ref) => {
   return (
     <ReactQuill
+      ref={ref}
       theme="snow"
       value={value}
       onChange={onChange}
@@ -19,6 +20,6 @@ const RichTextEditor = ({ value, onChange }) => {
       }}
     />
   );
-};
+});
 
 export default RichTextEditor;
