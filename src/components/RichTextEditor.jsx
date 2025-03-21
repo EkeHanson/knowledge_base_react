@@ -1,6 +1,7 @@
 import React, { useState, forwardRef } from "react";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import "quill/dist/quill.snow.css"; // ✅ Correct for react-quill v2+
+
 
 const RichTextEditor = forwardRef(({ value, onChange }, ref) => {
   return (
